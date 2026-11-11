@@ -1,0 +1,4 @@
+echo "exiting next"
+exit
+echo "after exit SHOULDNT GET HERE!"
+notacommand # invalid command!

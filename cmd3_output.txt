@@ -1,0 +1,4 @@
+prompt> "echo, then pause 1 sec"
+"and echo"
+prompt> "line 2"
+prompt> 

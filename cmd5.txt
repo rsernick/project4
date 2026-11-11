@@ -1,0 +1,5 @@
+sleep 10 & ; echo "started sleep"
+bash kill_sleep.sh
+status
+echo "after status, before exit"
+exit

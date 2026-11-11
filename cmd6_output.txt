@@ -1,0 +1,2 @@
+prompt> prompt> Cannot exit with child processes still running
+prompt> prompt> 

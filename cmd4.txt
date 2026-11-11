@@ -1,0 +1,8 @@
+sleep 2 & ; echo "started sleep 2"
+sleep 2 & ; echo "started sleep 2"
+sleep 2 & ; echo "started sleep 2"
+echo "calling exit next, but shouldn't exit because of running processes"
+exit
+echo "after exit"
+sleep 3 ; echo "done"
+exit

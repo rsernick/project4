@@ -1,0 +1,17 @@
+# build products
+*.o
+shell
+listtest
+a.out
+*.dSYM/
+
+# valgrind and core dumps
+vgcore.*
+core
+core.*
+
+# editor and OS files
+*~
+*.swp
+*.swo
+.DS_Store

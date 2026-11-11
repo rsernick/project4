@@ -1,0 +1,8 @@
+prompt> "started sleep 2"
+prompt> "started sleep 2"
+prompt> "started sleep 2"
+prompt> "calling exit next, but shouldn't exit because of running processes"
+prompt> Cannot exit with child processes still running
+prompt> "after exit"
+prompt> "done"
+prompt> 

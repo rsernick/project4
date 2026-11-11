@@ -1,0 +1,2 @@
+echo "echo, then pause 1 sec" ; sleep 1 ; echo "and echo"
+echo "line 2"

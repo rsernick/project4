@@ -1,0 +1,4 @@
+prompt> "line 1"
+prompt> "line 2"
+prompt> "line 3"
+prompt> 

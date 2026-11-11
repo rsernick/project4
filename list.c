@@ -17,7 +17,7 @@ struct proclist* proclist_new() {
 void proclist_free(struct proclist *head) {
     procnode *curr = head -> head;
     procnode *next;
-    while(curr !=NULL){
+    while(curr != NULL){
         free(curr -> cmd);
         next = curr -> next;
         free(curr);
@@ -27,6 +27,20 @@ void proclist_free(struct proclist *head) {
 }
 
 void proclist_add(struct proclist* head, pid_t pid, char *cmd) {
+    if(head -> length == 0){
+        procnode n;
+        procnode *node = malloc(sizeof(procnode));
+        n.pid = pid;
+        n.cmd = malloc(strlen(cmd) + 1);
+        memcpy(n.cmd, cmd, strlen(cmd) + 1);
+        n.next = NULL;
+
+        *node = n;
+        head -> head = node;
+        head -> length++;
+        return;
+    }
+
     procnode *curr = head -> head;
     procnode *next = curr -> next;
     while(next != NULL){
@@ -36,12 +50,13 @@ void proclist_add(struct proclist* head, pid_t pid, char *cmd) {
     procnode n;
     procnode *node = malloc(sizeof(procnode));
     n.pid = pid;
-    n.cmd = malloc(strlen(cmd));
-    memcpy(n.cmd, cmd, strlen(cmd));
+    n.cmd = malloc(strlen(cmd) + 1);
+    memcpy(n.cmd, cmd, strlen(cmd) + 1);
     n.next = NULL;
 
     *node = n;
     curr -> next = node;
+    head -> length ++;
 }
 
 struct procnode* proclist_find(struct proclist* head, pid_t pid) {
@@ -57,20 +72,24 @@ struct procnode* proclist_find(struct proclist* head, pid_t pid) {
 }
 
 void proclist_remove(struct proclist *head, pid_t pid) {
-    procnode* last = NULL;
     procnode* curr = head -> head;
+    procnode* next = curr -> next;
     if(curr -> pid == pid){
-        head -> head = curr -> next;
+        head -> head = next;
+        free(curr -> cmd);
+        free(curr);
+        head -> length --;
     }
-    while(curr !=NULL){
-        last = curr;
-        curr = last -> next;
-        if(curr -> pid == pid){
-            last -> next = curr -> next;
-            free(curr -> cmd);
-            free(curr);
+    while(next != NULL){
+        if(next -> pid == pid){
+            curr -> next = next -> next;
+            free(next -> cmd);
+            free(next);
+            head -> length --;
             return;
         }
+        curr = next;
+        next = curr -> next;
     }
 
 }

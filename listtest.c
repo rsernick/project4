@@ -48,7 +48,7 @@ int main() {
     proclist_remove(head, 42);
     XTEST((head->length == 0), "List length should be zero after removing all nodes.");
     XTEST((head->head == NULL), "List head should be NULL after removing all nodes.");
-
+    printf("Length: %i\n", head -> length);
     proclist_free(head);
 
     printf("Tests complete; all tests passed.  Be sure to still check for memory leaks (use valgrind).\n");

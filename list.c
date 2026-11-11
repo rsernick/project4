@@ -6,36 +6,85 @@
 #include "list.h"
 
 struct proclist* proclist_new() {
-    // TODO: allocate a new proclist on the heap, initialize head to NULL
-    // and length to 0, and return a pointer to it
-    return NULL;
+    proclist list;
+    list.head = NULL;
+    list.length = 0;
+    proclist *l = malloc(sizeof(proclist));
+    *l = list;
+    return l;
 }
 
 void proclist_free(struct proclist *head) {
-    // TODO: free every procnode in the list (including each node's cmd string),
-    // then free the proclist struct itself
+    procnode *curr = head -> head;
+    procnode *next;
+    while(curr !=NULL){
+        free(curr -> cmd);
+        next = curr -> next;
+        free(curr);
+        curr = next;
+    }
+    free(head);
 }
 
 void proclist_add(struct proclist* head, pid_t pid, char *cmd) {
-    // TODO: allocate a new procnode, copy cmd to the heap with strdup,
-    // set the pid, prepend the node to the list, and increment head->length
+    procnode *curr = head -> head;
+    procnode *next = curr -> next;
+    while(next != NULL){
+        curr = next;
+        next = curr -> next;
+    }
+    procnode n;
+    procnode *node = malloc(sizeof(procnode));
+    n.pid = pid;
+    n.cmd = malloc(strlen(cmd));
+    memcpy(n.cmd, cmd, strlen(cmd));
+    n.next = NULL;
+
+    *node = n;
+    curr -> next = node;
 }
 
 struct procnode* proclist_find(struct proclist* head, pid_t pid) {
-    // TODO: walk the list; return a pointer to the procnode whose pid matches,
-    // or NULL if no such node exists
+
+    procnode *curr = head -> head;
+    while(curr != NULL){
+        if(curr -> pid == pid){
+            return curr;
+        }
+        curr = curr -> next;
+    }
     return NULL;
 }
 
 void proclist_remove(struct proclist *head, pid_t pid) {
-    // TODO: find the node with the given pid, unlink it from the list,
-    // free its cmd string, free the node, and decrement head->length.
-    // Handle the special case where the node to remove is at the head.
-    // Do nothing if the list is empty or the pid is not found.
+    procnode* last = NULL;
+    procnode* curr = head -> head;
+    if(curr -> pid == pid){
+        head -> head = curr -> next;
+    }
+    while(curr !=NULL){
+        last = curr;
+        curr = last -> next;
+        if(curr -> pid == pid){
+            last -> next = curr -> next;
+            free(curr -> cmd);
+            free(curr);
+            return;
+        }
+    }
+
 }
 
 void proclist_print(struct proclist *head) {
-    // TODO: print "Processes currently active: " followed by each node's
-    // pid and cmd (one per line).  If the list is empty, print "none"
-    // on the same line as the header.
+    printf("Processes currently active ");
+    if(head -> length == 0){
+        printf("none\n");
+    }else{
+        printf("\n");
+    }
+    procnode *curr = head -> head;
+    while(curr != NULL){
+        printf("%i , %s\n", curr -> pid, curr -> cmd);
+        curr = curr -> next;
+    }
 }

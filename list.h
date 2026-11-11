@@ -4,16 +4,16 @@
 #include <sys/types.h>
 #include <sys/resource.h>
 
-struct procnode {
+typedef struct procnode {
     pid_t pid;
     char *cmd;
     struct procnode *next;
-};
+} procnode;
 
-struct proclist {
+typedef struct proclist {
     struct procnode *head;
     int length;
-};
+} proclist;
 
 struct proclist* proclist_new();
 void proclist_free(struct proclist *);

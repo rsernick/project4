@@ -80,10 +80,14 @@ void handle_comment(char *buffer) {
  * child_done - return true if the child process with the given pid has
  * already finished (uses waitpid with WNOHANG so it never blocks).
  */
+
 bool child_done(pid_t pid) {
-    int flag = 1;
-    waitpid(pid, &flag, WNOHANG);
-    return !flag;
+    pid_t result = waitpid(pid, NULL, WNOHANG);
+    if (result == pid) {
+        return true;
+    }
+
+    return false;
 }
 
 /*

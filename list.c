@@ -95,7 +95,7 @@ void proclist_remove(struct proclist *head, pid_t pid) {
 }
 
 void proclist_print(struct proclist *head) {
-    printf("Processes currently active ");
+    printf("Processes currently active: ");
     if(head -> length == 0){
         printf("none\n");
     }else{

@@ -1,0 +1,4 @@
+echo Starting test
+sleep 2 &
+sleep 4 &
+echo Commands finished

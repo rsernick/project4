@@ -107,8 +107,10 @@ void sweep_children(struct proclist *plist) {
         }
         curr = curr -> next;
     }
-    for(int i=0; i < kill -> length; i++){
-        proclist_remove(plist, proclist_get(kill, i));
+    curr = kill -> head;
+    while(curr != NULL){
+        proclist_remove(plist, curr -> pid);
+        curr = curr -> next;
     }
     proclist_free(kill);
 }
@@ -118,8 +120,6 @@ void sweep_children(struct proclist *plist) {
  * (replace it with a space) so the rest of the parsing sees a clean string.
  */
 bool check_background(char *cmd) {
-    // TODO: scan from the end of cmd looking for '&'; if found, replace
-    // it with ' ' and return true; otherwise return false
     int len = strlen(cmd);
     for(int i = len - 1; i >= 0; i--){
         if(cmd[i] == '&'){
@@ -140,7 +140,7 @@ bool check_background(char *cmd) {
  * user can type "echo" instead of "/bin/echo".
  */
 pid_t spawn_process(char **cmd, bool wait_for_child) {
-    // TODO: fork(); in child call execvp(cmd[0], cmd) with error handling;
+
     pid_t pid = fork();
     if(pid < 0){
         perror("Failed to create process\n");
@@ -157,6 +157,7 @@ pid_t spawn_process(char **cmd, bool wait_for_child) {
     return pid;
 }
 
+// Execute exit command
 bool spawn_exit(bool background_processes){
     if(background_processes){
         printf("Cannot exit with child processes still running\n");
@@ -165,8 +166,14 @@ bool spawn_exit(bool background_processes){
     return 0;
 }
 
-bool spawn_kill(char **cmd, proclist *plist){
-    return 0;
+// Execute kill command
+void spawn_kill(pid_t pid, proclist *plist){
+    if(proclist_find(plist, pid) != NULL){
+        kill(pid, SIGKILL);
+        printf("Killed process %d\n", pid);
+    }else{
+        printf("kill: process %d not found\n", pid);
+    }
 }
 
 /*
@@ -175,7 +182,6 @@ bool spawn_kill(char **cmd, proclist *plist){
  * Returns true to keep the shell running, false to exit.
  */
 bool process_command_line(char *buffer, struct proclist *plist) {
-    // TODO:
     //   1. call handle_comment(buffer)
     bool toreturn = 1;
     handle_comment(buffer);
@@ -203,7 +209,7 @@ bool process_command_line(char *buffer, struct proclist *plist) {
         }else if(!strcmp(*tokens, "status")){
             proclist_print(plist);
         }else if (!strcmp(*tokens, "kill")){
-            spawn_kill(tokens, plist);
+            spawn_kill(atoi(tokens[1]), plist);
         }else{
             if(background){
                 proclist_add(plist, spawn_process(tokens, 0), com);
@@ -226,8 +232,15 @@ int main(int argc, char **argv) {
     fflush(stdout);
     while (true) {
         if (fgets(buffer, 1024, stdin) == NULL) {
-            // TODO: on EOF, if background jobs are still running, print a
-            // warning once and wait (block) for all of them to finish
+            sweep_children(plist);
+            if(plist -> length > 0){
+                printf("Cannot exit with child processes still running\n");
+            }
+            procnode *curr = plist -> head;
+            while(curr != NULL){
+                waitpid(curr -> pid, NULL, 0);
+                curr = curr -> next;
+            }
             break;
         } else {
             if(!process_command_line(buffer, plist)){

@@ -5,6 +5,7 @@
 
 #include "list.h"
 
+// Return new heap allocated proclist
 struct proclist* proclist_new() {
     proclist list;
     list.head = NULL;
@@ -14,6 +15,7 @@ struct proclist* proclist_new() {
     return l;
 }
 
+// Free all space used by the list
 void proclist_free(struct proclist *head) {
     procnode *curr = head -> head;
     procnode *next;
@@ -26,6 +28,7 @@ void proclist_free(struct proclist *head) {
     free(head);
 }
 
+// Add an item to the end of the list
 void proclist_add(struct proclist* head, pid_t pid, char *cmd) {
     if(head -> length == 0){
         procnode n;
@@ -59,6 +62,7 @@ void proclist_add(struct proclist* head, pid_t pid, char *cmd) {
     head -> length ++;
 }
 
+// Find if an object with specified pid exists in list and returns the node, else return NULL
 struct procnode* proclist_find(struct proclist* head, pid_t pid) {
 
     procnode *curr = head -> head;
@@ -71,6 +75,7 @@ struct procnode* proclist_find(struct proclist* head, pid_t pid) {
     return NULL;
 }
 
+// Removes item from list and restructures list
 void proclist_remove(struct proclist *head, pid_t pid) {
     procnode* curr = head -> head;
     procnode* next = curr -> next;
@@ -94,6 +99,7 @@ void proclist_remove(struct proclist *head, pid_t pid) {
 
 }
 
+// Prints pid and cmd of all processes currently in the list
 void proclist_print(struct proclist *head) {
     printf("Processes currently active: ");
     if(head -> length == 0){
@@ -108,6 +114,7 @@ void proclist_print(struct proclist *head) {
     }
 }
 
+// returns the pid of a process given an index in the list (used to make iterating easier)
 pid_t proclist_get(proclist *head, int index){
     procnode *curr = head -> head;
     for(int i = 0; i < index; i++){

@@ -1,6 +1,6 @@
 echo "null command (buncha semicolons) coming next"
 ;; ; ; ; # and a comment
 echo "invalid command coming next:"
-notacommand
+notacommand123
 echo "done"
 exit

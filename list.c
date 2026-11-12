@@ -107,3 +107,14 @@ void proclist_print(struct proclist *head) {
         curr = curr -> next;
     }
 }
+
+pid_t proclist_get(proclist *head, int index){
+    procnode *curr = head -> head;
+    for(int i = 0; i < index; i++){
+        if(curr -> next == NULL){
+            perror("Index out of bounds\n");
+        }
+        curr = curr -> next;
+    }
+    return curr -> pid;
+}

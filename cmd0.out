@@ -1,0 +1,5 @@
+prompt> "null command (buncha semicolons) coming next"
+prompt> prompt> "invalid command coming next:"
+prompt> prompt> "done"
+prompt> prompt> "done"
+prompt> 

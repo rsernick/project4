@@ -21,5 +21,6 @@ void proclist_add(struct proclist *, pid_t, char *);
 void proclist_remove(struct proclist *, pid_t);
 struct procnode* proclist_find(struct proclist *, pid_t);
 void proclist_print(struct proclist *);
+pid_t proclist_get(proclist *, int);
 
 #endif // __LIST_H__
